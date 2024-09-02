@@ -12,7 +12,6 @@ VIDEO_SAVE_DIRECTORY = os.path.join(CUR_DIR, VIDEO_SAVE_DIRECTORY_NAME)
 AUDIO_SAVE_DIRECTORY = os.path.join(CUR_DIR, AUDIO_SAVE_DIRECTORY_NAME)
 
 app = ttk.Window(themename="darkly")
-app.geometry("500x90")
 
 app_frame = ttk.Frame(app)
 
@@ -26,7 +25,7 @@ def link_entry_focus_out(event):
 
 link_var = ttk.StringVar(app_frame, "YouTube link")
 link_entry = ttk.Entry(app_frame, textvariable=link_var, width=80)
-link_entry.pack(pady=10)
+link_entry.pack(pady=10, padx=8)
 link_entry.focus()
 link_entry.bind("<FocusIn>", link_entry_focus_in)
 link_entry.bind("<FocusOut>", link_entry_focus_out)
@@ -49,6 +48,8 @@ ttk.Spinbox(app_frame, from_=1, to=10, textvariable=copy_var, width=6).pack(pady
 ttk.Label(app_frame, text="Copies: ").pack(pady=5, padx=5, side="right")
 
 result_frame = ttk.Frame(app)
+result_label = ttk.Label(result_frame, text="Results:").pack(side="left")
+result_text = ttk.Text(result_frame, width=70, height=3, state="disabled").pack(padx=8, pady=5)
 
 def download(link_var, audio_var, video_var, copy_var) -> None: 
     """
@@ -147,5 +148,5 @@ def download(link_var, audio_var, video_var, copy_var) -> None:
 
 if __name__ == "__main__":
     app_frame.pack()
-    result_frame.pack()
+    result_frame.pack(pady=5)
     app.mainloop()
