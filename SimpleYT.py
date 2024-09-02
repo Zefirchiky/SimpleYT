@@ -12,6 +12,7 @@ VIDEO_SAVE_DIRECTORY = os.path.join(CUR_DIR, VIDEO_SAVE_DIRECTORY_NAME)
 AUDIO_SAVE_DIRECTORY = os.path.join(CUR_DIR, AUDIO_SAVE_DIRECTORY_NAME)
 
 app = ttk.Window(themename="darkly")
+app.geometry("500x90")
 
 app_frame = ttk.Frame(app)
 
@@ -24,7 +25,7 @@ def link_entry_focus_out(event):
     link_var.set("YouTube link" if link_var.get() == "" else link_var.get())
 
 link_var = ttk.StringVar(app_frame, "YouTube link")
-link_entry = ttk.Entry(app_frame, textvariable=link_var, width=100)
+link_entry = ttk.Entry(app_frame, textvariable=link_var, width=80)
 link_entry.pack(pady=10)
 link_entry.focus()
 link_entry.bind("<FocusIn>", link_entry_focus_in)
@@ -43,7 +44,7 @@ def download_threading():
     t1.start()
 ttk.Button(app_frame, text="Download", command=download_threading).pack(pady=5, padx=20, side="right")
 
-ttk.Spinbox(app_frame, from_=1, to=10, textvariable=copy_var).pack(pady=5, side="right")
+ttk.Spinbox(app_frame, from_=1, to=10, textvariable=copy_var, width=6).pack(pady=5, side="right")
 
 ttk.Label(app_frame, text="Copies: ").pack(pady=5, padx=5, side="right")
 
