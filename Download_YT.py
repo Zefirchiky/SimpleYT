@@ -24,7 +24,12 @@ ttk.Checkbutton(app_frame, text="Audio", variable=audio_var).pack(pady=5, padx=2
 ttk.Checkbutton(app_frame, text="Video", variable=video_var).pack(pady=5, padx=15, side="left")
 
 copy_var = ttk.IntVar(app_frame, 1)
-ttk.Button(app_frame, text="Download", command=lambda: asyncio.run(download(link_var, audio_var, video_var, copy_var))).pack(pady=5, padx=20, side="right")
+
+def download_threading(): 
+    # Call work function 
+    t1=threading.Thread(target=download, args=(link_var, audio_var, video_var, copy_var))
+    t1.start()
+ttk.Button(app_frame, text="Download", command=download_threading).pack(pady=5, padx=20, side="right")
 
 ttk.Spinbox(app_frame, from_=1, to=10, textvariable=copy_var).pack(pady=5, side="right")
 
@@ -32,7 +37,7 @@ ttk.Label(app_frame, text="Copies: ").pack(pady=5, padx=5, side="right")
 
 result_frame = ttk.Frame(app)
 
-async def download(link_var, audio_var, video_var, copy_var) -> None: 
+def download(link_var, audio_var, video_var, copy_var) -> None: 
     """
     Downloads YouTube video or audio from given link.
 
@@ -92,6 +97,7 @@ async def download(link_var, audio_var, video_var, copy_var) -> None:
         ok_video = ttk.Label(result_frame, text=f"Video was downloaded successfully:\n{video_file_dir}", foreground="green")
         ok_video.pack(pady=5, side="bottom")
         ok_video.after(3000, ok_video.destroy)
+        result_frame.pack()
         
     if is_audio:
         # Get the audio with the highest quality
@@ -101,6 +107,7 @@ async def download(link_var, audio_var, video_var, copy_var) -> None:
             fail_audio = ttk.Label(result_frame, text="Failed to download audio:\nNo audio found", foreground="red")
             fail_audio.pack(pady=5)
             fail_audio.after(3000, fail_audio.destroy)
+            result_frame.pack()
             return
         try:
             # Download the audio
@@ -110,6 +117,7 @@ async def download(link_var, audio_var, video_var, copy_var) -> None:
             fail_audio = ttk.Label(result_frame, text=f"Failed to download audio:\n{a}", foreground="red")
             fail_audio.pack(pady=5)
             fail_audio.after(3000, fail_audio.destroy)
+            result_frame.pack()
             return
         # Replace the downloaded audio with the correct name
         os.replace(f"{AUDIO_SAVE_DIRECTORY}/{filename_dir}", audio_file_dir)
