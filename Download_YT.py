@@ -2,7 +2,6 @@ from pytube import YouTube
 from shutil import copy2
 import ttkbootstrap as ttk
 import threading
-import asyncio
 import os
 
 VIDEO_SAVE_DIRECTORY_NAME = "Video"
@@ -16,8 +15,21 @@ app = ttk.Window(themename="darkly")
 
 app_frame = ttk.Frame(app)
 
+def link_entry_focus_in(event):
+    link_entry["foreground"] = "white"
+    link_var.set("")
+
+def link_entry_focus_out(event):
+    link_entry["foreground"] = "grey"
+    link_var.set("YouTube link")
+
 link_var = ttk.StringVar(app_frame, "YouTube link")
-ttk.Entry(app_frame, textvariable=link_var, width=100).pack(pady=10)
+link_entry = ttk.Entry(app_frame, textvariable=link_var, width=100)
+link_entry.pack(pady=10)
+link_entry.focus()
+link_entry.bind("<FocusIn>", link_entry_focus_in)
+link_entry.bind("<FocusOut>", link_entry_focus_out)
+
 
 audio_var, video_var = ttk.BooleanVar(app_frame, True), ttk.BooleanVar(app_frame, False)
 ttk.Checkbutton(app_frame, text="Audio", variable=audio_var).pack(pady=5, padx=20, side="left")
