@@ -7,7 +7,7 @@ import os
 VIDEO_SAVE_DIRECTORY_NAME = "Video"
 AUDIO_SAVE_DIRECTORY_NAME = "Audio"
 
-CUR_DIR = os.getcwd()
+CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 VIDEO_SAVE_DIRECTORY = os.path.join(CUR_DIR, VIDEO_SAVE_DIRECTORY_NAME)
 AUDIO_SAVE_DIRECTORY = os.path.join(CUR_DIR, AUDIO_SAVE_DIRECTORY_NAME)
 
@@ -21,7 +21,7 @@ def link_entry_focus_in(event):
 
 def link_entry_focus_out(event):
     link_entry["foreground"] = "grey"
-    link_var.set("YouTube link")
+    link_var.set("YouTube link" if link_var.get() == "" else link_var.get())
 
 link_var = ttk.StringVar(app_frame, "YouTube link")
 link_entry = ttk.Entry(app_frame, textvariable=link_var, width=100)
@@ -85,7 +85,7 @@ def download(link_var, audio_var, video_var, copy_var) -> None:
         vid = video.streams.get_highest_resolution()
         if vid is None:
             # If no video is found, show an error message
-            fail_video = ttk.Label(result_frame, text="Failed to download video:\nNo video found", foreground="red")
+            fail_video = ttk.Label(result_frame, text="Failed to download video:\nNo video found", foreground="red", width=100)
             fail_video.pack(pady=5)
             fail_video.after(3000, fail_video.destroy)
             return
@@ -94,7 +94,7 @@ def download(link_var, audio_var, video_var, copy_var) -> None:
             vid.download(VIDEO_SAVE_DIRECTORY, filename=filename_dir)
         except Exception as a:
             # If an error occurs during download, show an error message
-            fail_video = ttk.Label(result_frame, text=f"Failed to download video:\n{a}", foreground="red")
+            fail_video = ttk.Label(result_frame, text=f"Failed to download video:\n{a}", foreground="red", width=100)
             fail_video.pack(pady=5)
             fail_video.after(3000, fail_video.destroy)
             return 
@@ -106,7 +106,7 @@ def download(link_var, audio_var, video_var, copy_var) -> None:
             name = name + f' ({i + 2})' + ext
             copy2(video_file_dir, name)
         # Show a success message
-        ok_video = ttk.Label(result_frame, text=f"Video was downloaded successfully:\n{video_file_dir}", foreground="green")
+        ok_video = ttk.Label(result_frame, text=f"Video was downloaded successfully:\n{video_file_dir}", foreground="green", width=100)
         ok_video.pack(pady=5, side="bottom")
         ok_video.after(3000, ok_video.destroy)
         result_frame.pack()
@@ -116,7 +116,7 @@ def download(link_var, audio_var, video_var, copy_var) -> None:
         audio = video.streams.filter(only_audio = True).first()
         if audio is None:
             # If no audio is found, show an error message
-            fail_audio = ttk.Label(result_frame, text="Failed to download audio:\nNo audio found", foreground="red")
+            fail_audio = ttk.Label(result_frame, text="Failed to download audio:\nNo audio found", foreground="red", width=100)
             fail_audio.pack(pady=5)
             fail_audio.after(3000, fail_audio.destroy)
             result_frame.pack()
@@ -126,7 +126,7 @@ def download(link_var, audio_var, video_var, copy_var) -> None:
             audio.download(AUDIO_SAVE_DIRECTORY, filename=filename_dir)
         except Exception as a:
             # If an error occurs during download, show an error message
-            fail_audio = ttk.Label(result_frame, text=f"Failed to download audio:\n{a}", foreground="red")
+            fail_audio = ttk.Label(result_frame, text=f"Failed to download audio:\n{a}", foreground="red", width=100)
             fail_audio.pack(pady=5)
             fail_audio.after(3000, fail_audio.destroy)
             result_frame.pack()
@@ -139,7 +139,7 @@ def download(link_var, audio_var, video_var, copy_var) -> None:
             name = name + f' ({i + 2})' + ext
             copy2(audio_file_dir, name)
         # Show a success message
-        ok_audio = ttk.Label(result_frame, text=f"Audio was downloaded successfully:\n{audio_file_dir}", foreground="green")
+        ok_audio = ttk.Label(result_frame, text=f"Audio was downloaded successfully:\n{audio_file_dir}", foreground="green", width=100)
         ok_audio.pack(pady=5, side="bottom")
         ok_audio.after(3000, ok_audio.destroy)
     
