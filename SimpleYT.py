@@ -65,5 +65,5 @@ if __name__ == "__main__":
     app_frame.pack()
     result_frame.pack(pady=5)
     result_text_frame.pack(padx=5, pady=5, side="left")
-    result()
+    result(f"Current directory: {CUR_DIR}")
     app.mainloop()
