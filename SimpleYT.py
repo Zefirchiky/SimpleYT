@@ -6,7 +6,7 @@ import os
 VIDEO_SAVE_DIRECTORY_NAME = "Video"
 AUDIO_SAVE_DIRECTORY_NAME = "Audio"
 
-CUR_DIR = os.path.abspath(os.path.dirname(__file__))
+CUR_DIR = os.getcwd()
 VIDEO_SAVE_DIRECTORY = os.path.join(CUR_DIR, VIDEO_SAVE_DIRECTORY_NAME)
 AUDIO_SAVE_DIRECTORY = os.path.join(CUR_DIR, AUDIO_SAVE_DIRECTORY_NAME)
 
