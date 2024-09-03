@@ -18,12 +18,18 @@ def download(link_var, audio_var, video_var, copy_var,
         None
     """
     result(f"Processing {f"{link_var.get()}"}")
-    video = YouTube(link_var.get())
+    try:
+        video = YouTube(link_var.get())
+    except:
+        result(f"Failed to process ({link_var.get()}): Link is invalid", 'Red')
+        return 
+
     is_video = video_var.get()
     is_audio = audio_var.get()
 
     if video is None:
         # If the link is invalid, show an error message
+        result(f"Failed to process ({link_var.get()}): Link is invalid", 'Red')
         return
 
     if video.author in video.title: filename = f'{video.title}.mp4'
@@ -38,13 +44,13 @@ def download(link_var, audio_var, video_var, copy_var,
         vid = video.streams.get_highest_resolution()
         if vid is None:
             # If no video is found, show an error message
-            result(f"Failed to download video ({filename}): {"No video found"}", 'Red')
+            result(f"Failed to download video ({filename}): No video found", 'Red')
             return
         try:
             # Download the video
             vid.download(VIDEO_SAVE_DIRECTORY, filename=filename_dir)
         except Exception as a:
-            result(f"Failed to download video ({filename}): {f"{a}"}", 'Red')
+            result(f"Failed to download video ({filename}): {a}", 'Red')
             return 
         # Replace the downloaded video with the correct name
         os.replace(f"{VIDEO_SAVE_DIRECTORY}/{filename_dir}", video_file_dir)
@@ -59,13 +65,13 @@ def download(link_var, audio_var, video_var, copy_var,
         audio = video.streams.filter(only_audio = True).first()
         if audio is None:
             # If no audio is found, show an error message
-            result(f"Failed to download audio ({filename}): {"No audio found"}", 'Red')
+            result(f"Failed to download audio ({filename}): No audio found", 'Red')
             return
         try:
             # Download the audio
             audio.download(AUDIO_SAVE_DIRECTORY, filename=filename_dir)
         except Exception as a:
-            result(f"Failed to download audio ({filename}): {f"{a}"}", 'Red')
+            result(f"Failed to download audio ({filename}): {a}", 'Red')
             return
         # Replace the downloaded audio with the correct name
         os.replace(f"{AUDIO_SAVE_DIRECTORY}/{filename_dir}", audio_file_dir)
