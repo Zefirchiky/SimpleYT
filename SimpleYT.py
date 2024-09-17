@@ -11,6 +11,7 @@ VIDEO_SAVE_DIRECTORY = os.path.join(CUR_DIR, VIDEO_SAVE_DIRECTORY_NAME)
 AUDIO_SAVE_DIRECTORY = os.path.join(CUR_DIR, AUDIO_SAVE_DIRECTORY_NAME)
 
 app = ttk.Window(themename="darkly")
+app.title("Simple YouTube")
 
 app_frame = ttk.Frame(app)
 result_frame = ttk.Frame(app)
@@ -30,6 +31,7 @@ link_entry.bind("<FocusIn>", link_entry_focus_in)
 def link_entry_focus_out(event):
     link_entry["foreground"] = "grey"
     link_var.set("YouTube link" if link_var.get() == "" else link_var.get())
+    print("YouTube link" if link_var.get() == "" else link_var.get())
 link_entry.bind("<FocusOut>", link_entry_focus_out)
 
 
