@@ -1,71 +1,65 @@
-from download import download
-import ttkbootstrap as ttk
-import threading
-import os
-
-VIDEO_SAVE_DIRECTORY_NAME = "Video"
-AUDIO_SAVE_DIRECTORY_NAME = "Audio"
-
-CUR_DIR = os.getcwd()
-VIDEO_SAVE_DIRECTORY = os.path.join(CUR_DIR, VIDEO_SAVE_DIRECTORY_NAME)
-AUDIO_SAVE_DIRECTORY = os.path.join(CUR_DIR, AUDIO_SAVE_DIRECTORY_NAME)
-
-app = ttk.Window(themename="darkly")
-app.title("Simple YouTube")
-
-app_frame = ttk.Frame(app)
-result_frame = ttk.Frame(app)
-result_text_frame = ttk.Frame(result_frame)
-
-''' WIDGETS '''
-link_var = ttk.StringVar(app_frame, "YouTube link")
-link_entry = ttk.Entry(app_frame, textvariable=link_var, width=80)
-link_entry.pack(pady=10, padx=8)
-link_entry.focus()
-
-def link_entry_focus_in(event):
-    link_entry["foreground"] = "white"
-    link_var.set("")
-link_entry.bind("<FocusIn>", link_entry_focus_in)
-
-def link_entry_focus_out(event):
-    link_entry["foreground"] = "grey"
-    link_var.set("YouTube link" if link_var.get() == "" else link_var.get())
-    print("YouTube link" if link_var.get() == "" else link_var.get())
-link_entry.bind("<FocusOut>", link_entry_focus_out)
+from PySide6.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QWidget,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+    QVBoxLayout,
+    QHBoxLayout,
+    QSizePolicy,
+    QCheckBox,
+)
 
 
-audio_var, video_var = ttk.BooleanVar(app_frame, True), ttk.BooleanVar(app_frame, False)
-ttk.Checkbutton(app_frame, text="Audio", variable=audio_var).pack(pady=5, padx=20, side="left")
-ttk.Checkbutton(app_frame, text="Video", variable=video_var).pack(pady=5, padx=10, side="left")
+class App:
+    def __init__(self):
+        self.app = QApplication()
+        self.app.setApplicationName('YtDownloader')
+        self.window = QMainWindow()
+        self.window.resize(500, 100)
 
-def download_threading(): 
-    t1=threading.Thread(target=download, args=(link_var, audio_var, video_var, copy_var,
-                                               VIDEO_SAVE_DIRECTORY, AUDIO_SAVE_DIRECTORY, result))
-    t1.start()
-ttk.Button(app_frame, text="Download", command=download_threading).pack(pady=5, padx=20, side="right")
+        self.url_input = QLineEdit()
+        self.url_input.setPlaceholderText("Url of YouTube video")
+        self.url_input.setFixedHeight(25)
+        
+        self.video_selection_checkbox = QCheckBox()
+        self.video_selection_checkbox.setFixedWidth(17)
+        self.video_selection_checkbox.setChecked(False)
 
-copy_var = ttk.IntVar(app_frame, 1)
-ttk.Spinbox(app_frame, from_=1, to=10, textvariable=copy_var, width=6).pack(pady=5, side="right")
+        self.audio_selection_checkbox = QCheckBox()
+        self.audio_selection_checkbox.setFixedWidth(17)
+        self.audio_selection_checkbox.setChecked(True)
+        
+        self.download_button = QPushButton("Download")
+        self.download_button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.download_button.setFixedHeight(30)
+        self.download_button.setFixedWidth(100)
+        
+        self.download_layout = QHBoxLayout()
+        self.download_layout.setContentsMargins(5, 0, 5, 0)
+        self.download_layout.addWidget(QLabel('Video:'))
+        self.download_layout.addWidget(self.video_selection_checkbox)
+        self.download_layout.addSpacing(15)
+        self.download_layout.addWidget(QLabel('Audio:'))
+        self.download_layout.addWidget(self.audio_selection_checkbox)
+        self.download_layout.addStretch(1)
+        self.download_layout.addWidget(self.download_button)
 
-ttk.Label(app_frame, text="Copies: ").pack(pady=5, padx=5, side="right")
+        self.root_layout = QVBoxLayout()
+        self.root_layout.addWidget(self.url_input)
+        self.root_layout.addLayout(self.download_layout)
 
-''' RESULT '''
-result_label = ttk.Label(result_frame, text="Results:")
-result_label.pack(side="left", padx=5)
+        self.root = QWidget()
+        self.root.setLayout(self.root_layout)
 
-result_var = ttk.StringVar(app)
-result_text = ttk.Entry(result_text_frame, textvariable=result_var, width=70, background="Black", foreground="White")
-result_text.pack()
+        self.window.setCentralWidget(self.root)
 
-def result(text="", color="white"):
-    result_var.set(text)
-    result_text['foreground'] = color
+    def run(self):
+        self.window.show()
+        self.app.exec()
 
 
 if __name__ == "__main__":
-    app_frame.pack()
-    result_frame.pack(pady=5)
-    result_text_frame.pack(padx=5, pady=5, side="left")
-    result(f"Current directory: {CUR_DIR}")
-    app.mainloop()
+    app = App()
+    app.run()
